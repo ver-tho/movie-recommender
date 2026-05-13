@@ -1,0 +1,6 @@
+accounts.txt
+*_watched.txt
+__pycache__/
+*.pyc
+.env
+.DS_Store
