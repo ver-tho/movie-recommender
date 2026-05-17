@@ -6,7 +6,7 @@ from auth import create_account, login, save_watched_movies, load_watched_movies
 # Page config
 # ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="🎬 CineMatch",
+    page_title="🎬 Movie Recommender",
     page_icon="🎬",
     layout="centered",
 )
@@ -89,6 +89,17 @@ textarea::placeholder { color: #777777 !important; }
     font-weight: 600 !important;
     transition: all 0.2s ease !important;
 }
+/* Force button text to always be visible */
+.stButton > button p,
+.stButton > button span,
+.stButton > button div {
+    color: #111111 !important;
+}
+.stButton > button:hover p,
+.stButton > button:hover span,
+.stButton > button:hover div {
+    color: #ffffff !important;
+}
 
 /* ALL buttons hover: dark blue background, white text */
 .stButton > button:hover {
@@ -167,8 +178,9 @@ def movie_card(movie, idx, show_watch_button=True):
 # ─────────────────────────────────────────────
 def page_auth():
     st.markdown("""
-        <h1 style='text-align:center; font-size:3rem; margin-bottom:0;'>🎬 CineMatch</h1>
-        <p style='text-align:center; color:#aaa; font-size:1.1rem; margin-top:4px;'>
+        <h1 style='text-align:center; font-size:3rem; margin-bottom:0; color:#ffffff;'>🎬 Movie Recommender</h1>
+
+        <p style='text-align:center; color:#cccccc; font-size:1.1rem; margin-top:4px;'>
             Mood-based movie & TV recommendations
         </p>
     """, unsafe_allow_html=True)
