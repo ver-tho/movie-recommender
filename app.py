@@ -6,10 +6,52 @@ from auth import create_account, login, save_watched_movies, load_watched_movies
 # Page config
 # ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="Movie & TV Recommender",
+    page_title="🎬 CineMatch",
     page_icon="🎬",
     layout="centered",
 )
+
+# ─────────────────────────────────────────────
+# Global styling & background
+# ─────────────────────────────────────────────
+st.markdown("""
+<style>
+/* Dark cinematic background */
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+}
+[data-testid="stHeader"] {
+    background: transparent;
+}
+
+/* Card-style containers */
+[data-testid="stExpander"] {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+
+/* Primary button glow */
+.stButton > button[kind="primary"] {
+    background: linear-gradient(90deg, #e94560, #c0392b);
+    border: none;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+.stButton > button[kind="primary"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(233,69,96,0.5);
+}
+
+/* Divider colour */
+hr { border-color: rgba(255,255,255,0.1) !important; }
+</style>
+""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # Session state defaults
@@ -58,8 +100,14 @@ def movie_card(movie, idx, show_watch_button=True):
 # PAGE: Auth (login / create account)
 # ─────────────────────────────────────────────
 def page_auth():
-    st.title("🎬 Movie & TV Recommender")
-    st.markdown("Find something to watch based on your mood.")
+    st.markdown("""
+        <h1 style='text-align:center; font-size:3rem; margin-bottom:0;'>🎬 CineMatch</h1>
+        <p style='text-align:center; color:#aaa; font-size:1.1rem; margin-top:4px;'>
+            Mood-based movie & TV recommendations
+        </p>
+    """, unsafe_allow_html=True)
+    st.divider()
+    st.info("⚠️ Accounts are session-only — you'll need to create a new account each visit.", icon="ℹ️")
     st.divider()
 
     tab_login, tab_create = st.tabs(["Login", "Create account"])
@@ -104,6 +152,7 @@ def page_prefs():
     mood = st.radio(
         "How are you feeling?",
         mood_options,
+        index=None,
         horizontal=True,
         format_func=lambda m: m.capitalize(),
     )
@@ -114,6 +163,7 @@ def page_prefs():
     content_type = st.radio(
         "What do you want to watch?",
         ["movie", "tv"],
+        index=None,
         horizontal=True,
         format_func=lambda x: "🎬 Movie" if x == "movie" else "📺 TV Show",
     )
@@ -123,9 +173,10 @@ def page_prefs():
     period_label = st.radio(
         "Era preference",
         list(period_map.keys()),
+        index=None,
         horizontal=True,
     )
-    release_period = period_map[period_label]
+    release_period = period_map[period_label] if period_label else "any"
 
     st.divider()
 
@@ -147,7 +198,7 @@ def page_prefs():
     party_mode = st.checkbox("🎉 Watch party mode (multiple people)")
     preferred_genres = []
 
-    genre_map = MOVIE_GENRES if content_type == "movie" else TV_GENRES
+    genre_map = MOVIE_GENRES if content_type != "tv" else TV_GENRES
     genre_name_to_id = {v: k for k, v in genre_map.items()}
     genre_names = sorted(genre_name_to_id.keys())
 
@@ -170,28 +221,33 @@ def page_prefs():
     st.divider()
 
     if st.button("🎯 Get recommendations", use_container_width=True, type="primary"):
-        user = User(
-            name=st.session_state["username"],
-            mood=mood,
-            content_type=content_type,
-            max_time=max_time,
-            preferred_genres=preferred_genres,
-            release_period=release_period,
-        )
-        user.watched_movies = st.session_state["watched"]
-
-        with st.spinner("Fetching recommendations from TMDB…"):
-            engine = RecommendationEngine(user)
-            recs, watched_matches, error = engine.generate_recommendations()
-
-        if error:
-            st.error(error)
+        if not mood:
+            st.warning("Please select a mood first.")
+        elif not content_type:
+            st.warning("Please select Movie or TV Show.")
         else:
-            st.session_state["recommendations"] = recs
-            st.session_state["watched_matches"] = watched_matches
-            st.session_state["mood"] = mood
-            st.session_state["page"] = "results"
-            st.rerun()
+            user = User(
+                name=st.session_state["username"],
+                mood=mood,
+                content_type=content_type,
+                max_time=max_time,
+                preferred_genres=preferred_genres,
+                release_period=release_period,
+            )
+            user.watched_movies = st.session_state["watched"]
+
+            with st.spinner("Fetching recommendations from TMDB…"):
+                engine = RecommendationEngine(user)
+                recs, watched_matches, error = engine.generate_recommendations()
+
+            if error:
+                st.error(error)
+            else:
+                st.session_state["recommendations"] = recs
+                st.session_state["watched_matches"] = watched_matches
+                st.session_state["mood"] = mood
+                st.session_state["page"] = "results"
+                st.rerun()
 
     st.divider()
     if st.button("Logout", use_container_width=True):
