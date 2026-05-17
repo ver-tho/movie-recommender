@@ -16,30 +16,61 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
-/* Dark cinematic background */
+/* Cinematic background */
 [data-testid="stAppViewContainer"] {
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
     min-height: 100vh;
 }
-[data-testid="stHeader"] {
-    background: transparent;
+[data-testid="stHeader"] { background: transparent; }
+
+/* Make ALL text white/light */
+html, body, [class*="css"], p, span, label, div,
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stText"] {
+    color: #f0f0f0 !important;
 }
 
-/* Card-style containers */
+/* Headings bright white */
+h1, h2, h3, h4 { color: #ffffff !important; }
+
+/* Inputs: white text on semi-transparent background */
+input, textarea, [data-testid="stTextInput"] input {
+    background: rgba(255,255,255,0.12) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    border-radius: 8px !important;
+}
+input::placeholder { color: rgba(255,255,255,0.5) !important; }
+
+/* Tabs */
+[data-testid="stTabs"] button { color: #cccccc !important; }
+[data-testid="stTabs"] button[aria-selected="true"] { color: #ffffff !important; }
+
+/* Radio & checkbox labels */
+[data-testid="stRadio"] label,
+[data-testid="stCheckbox"] label { color: #f0f0f0 !important; }
+
+/* Expander headers */
+[data-testid="stExpander"] summary {
+    color: #ffffff !important;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+}
 [data-testid="stExpander"] {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
     border-radius: 12px;
     margin-bottom: 8px;
 }
 
-/* Primary button glow */
+/* Multiselect tags */
+[data-testid="stMultiSelect"] span { color: #ffffff !important; }
+
+/* Primary button */
 .stButton > button[kind="primary"] {
     background: linear-gradient(90deg, #e94560, #c0392b);
     border: none;
-    color: white;
+    color: white !important;
     font-weight: 600;
-    letter-spacing: 0.5px;
     border-radius: 8px;
     transition: all 0.2s;
 }
@@ -48,8 +79,14 @@ st.markdown("""
     box-shadow: 0 4px 20px rgba(233,69,96,0.5);
 }
 
-/* Divider colour */
-hr { border-color: rgba(255,255,255,0.1) !important; }
+/* Secondary buttons */
+.stButton > button { color: #f0f0f0 !important; }
+
+/* Info / warning banners */
+[data-testid="stAlert"] { color: #f0f0f0 !important; }
+
+/* Divider */
+hr { border-color: rgba(255,255,255,0.15) !important; }
 </style>
 """, unsafe_allow_html=True)
 
