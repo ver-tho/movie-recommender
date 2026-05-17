@@ -23,6 +23,12 @@ st.markdown("""
 }
 [data-testid="stHeader"] { background: transparent; }
 
+/* Toolbar icons (share, etc.) — force white */
+[data-testid="stToolbar"] button svg,
+[data-testid="stToolbar"] button,
+[data-testid="stDecoration"] { color: #ffffff !important; fill: #ffffff !important; }
+header button svg { fill: #ffffff !important; }
+
 /* Make ALL text white/light */
 html, body, [class*="css"], p, span, label, div,
 [data-testid="stMarkdownContainer"] p,
@@ -33,14 +39,26 @@ html, body, [class*="css"], p, span, label, div,
 /* Headings bright white */
 h1, h2, h3, h4 { color: #ffffff !important; }
 
-/* Inputs: white text on semi-transparent background */
-input, textarea, [data-testid="stTextInput"] input {
-    background: rgba(255,255,255,0.12) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
+/* Inputs: WHITE background, BLACK text — fully readable */
+input, textarea,
+[data-testid="stTextInput"] input,
+[data-testid="stTextInput"] textarea {
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
     border-radius: 8px !important;
 }
-input::placeholder { color: rgba(255,255,255,0.5) !important; }
+input::placeholder,
+textarea::placeholder { color: #777777 !important; }
+
+/* Multiselect input area */
+[data-testid="stMultiSelect"] input { color: #111111 !important; }
+[data-testid="stMultiSelect"] > div { background: #ffffff !important; color: #111111 !important; }
+[data-testid="stMultiSelect"] span { color: #111111 !important; }
+
+/* Selectbox */
+[data-testid="stSelectbox"] select,
+[data-testid="stSelectbox"] > div { background: #ffffff !important; color: #111111 !important; }
 
 /* Tabs */
 [data-testid="stTabs"] button { color: #cccccc !important; }
@@ -62,25 +80,36 @@ input::placeholder { color: rgba(255,255,255,0.5) !important; }
     margin-bottom: 8px;
 }
 
-/* Multiselect tags */
-[data-testid="stMultiSelect"] span { color: #ffffff !important; }
+/* ALL buttons: white background, black text by default */
+.stButton > button {
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid rgba(255,255,255,0.4) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
 
-/* Primary button */
+/* ALL buttons hover: dark blue background, white text */
+.stButton > button:hover {
+    background: #0f3460 !important;
+    color: #ffffff !important;
+    border-color: #0f3460 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 16px rgba(15,52,96,0.5) !important;
+}
+
+/* Primary button (Get recommendations): red, always white text */
 .stButton > button[kind="primary"] {
-    background: linear-gradient(90deg, #e94560, #c0392b);
-    border: none;
-    color: white !important;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s;
+    background: linear-gradient(90deg, #e94560, #c0392b) !important;
+    color: #ffffff !important;
+    border: none !important;
 }
 .stButton > button[kind="primary"]:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(233,69,96,0.5);
+    background: linear-gradient(90deg, #c0392b, #a93226) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 20px rgba(233,69,96,0.5) !important;
 }
-
-/* Secondary buttons */
-.stButton > button { color: #f0f0f0 !important; }
 
 /* Info / warning banners */
 [data-testid="stAlert"] { color: #f0f0f0 !important; }
